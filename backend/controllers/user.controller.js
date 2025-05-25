@@ -35,7 +35,7 @@ export const registerUser = async (req, res) => {
     });
     generateToken(res, registeredUser, "User register successfully!");
   } catch (error) {
-    
+    console.log(error.message)
     res.status(500).json({
       success: false,
       msg: "registerUser : Something went wrong",
@@ -73,7 +73,7 @@ export const loginUser = async (req, res) => {
     }
     generateToken(res, user, `Welcome back ${user.fullname}`);
   } catch (error) {
-    
+    console.log(error.message)
     res.status(500).json({
       success: false,
       msg: "loginUser : Something went wrong",

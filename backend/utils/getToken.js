@@ -7,7 +7,7 @@ export const generateToken = (res , user , msg) => {
 
 
     return res.status(200)
-    .cookie("awasthi_token" , token , {httpOnly:true , sameSite:'strict' , maxAge:24*60*60*1000})
+    .cookie("awasthi_token" , token , {httpOnly:true , sameSite:'none' , secure: true , maxAge:24*60*60*1000})
     .json({
         success : true,
         msg,
