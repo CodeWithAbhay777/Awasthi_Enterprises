@@ -1,5 +1,5 @@
 import React from "react";
-import Logo from "./logo";
+import Logo from "./Logo";
 import { useSelector,useDispatch } from "react-redux";
 import { Button } from "./ui/button";
 import { Menu } from "lucide-react";

@@ -24,7 +24,7 @@ const EntryPage = () => {
 
     const apiCall = async () => {
       const response = await meUser();
-      console.log("COde reached here")
+      
       if (!response.success) {
         toast.error(response.res);
         const newUser = {authentication : false , authUserData : null};

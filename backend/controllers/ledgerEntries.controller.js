@@ -33,7 +33,7 @@ export const getAllEntries = async (req, res) => {
       success: true,
     });
   } catch (error) {
-    console.log(error);
+   
     res.status(500).json({
       success: false,
       msg: "Something went wrong",
@@ -108,7 +108,7 @@ export const postEntry = async (req, res) => {
       success: true,
     });
   } catch (error) {
-    console.log(error);
+  
     res.status(500).json({
       success: false,
       msg: "Something went wrong",
@@ -154,7 +154,7 @@ export const editEntry = async (req, res) => {
 
     return res.status(200).json({ msg: "Entry edited", success: true });
   } catch (err) {
-    console.log(err);
+    
     res.status(500).json({ msg: "Something went wrong", success: false });
   }
 };
@@ -195,7 +195,7 @@ export const deleteEntry = async (req, res) => {
       .status(200)
       .json({ msg: "Entry deleted successfully", success: true });
   } catch (error) {
-    console.log(error);
+    
     res.status(500).json({ msg: "Something went wrong", success: false });
   }
 };

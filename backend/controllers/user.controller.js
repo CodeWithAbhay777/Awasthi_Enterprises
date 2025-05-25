@@ -35,7 +35,7 @@ export const registerUser = async (req, res) => {
     });
     generateToken(res, registeredUser, "User register successfully!");
   } catch (error) {
-    console.log(error.message);
+    
     res.status(500).json({
       success: false,
       msg: "registerUser : Something went wrong",
@@ -54,7 +54,7 @@ export const loginUser = async (req, res) => {
       });
     }
 
-    const user = await userModel.findOne({ username });
+    const user = await userModel.findOne({ username , role});
 
     if (!user) {
       return res.status(404).json({
@@ -73,7 +73,7 @@ export const loginUser = async (req, res) => {
     }
     generateToken(res, user, `Welcome back ${user.fullname}`);
   } catch (error) {
-    console.log(error.message);
+    
     res.status(500).json({
       success: false,
       msg: "loginUser : Something went wrong",
@@ -88,7 +88,7 @@ export const logoutUser = async (_, res) => {
       success: true,
     });
   } catch (error) {
-    console.log(error);
+  
     return res.status(500).json({
       success: false,
       msg : "Failed to logout : Something went wrong",
@@ -113,7 +113,7 @@ export const getLoggedInUser = async (req, res) => {
 
     res.status(200).json({ success: true, user });
   } catch (error) {
-    console.log(error.message);
+  
     res.status(401).json({ success: false, msg: "Invalid token" });
   }
 };

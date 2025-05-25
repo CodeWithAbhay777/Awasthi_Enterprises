@@ -21,7 +21,7 @@ export const getLedgerAccounts = async (req, res) => {
       data: ledgerAccounts,
     });
   } catch (error) {
-    console.log(error.message);
+    
     res.status(500).json({
       success: false,
       msg: "Something went wrong",
@@ -48,7 +48,7 @@ export const getLedgerAccountData = async (req, res) => {
       data: accountData,
     });
   } catch (error) {
-    console.log(error.message);
+    
     return res.status(500).json({
       success: false,
       msg: "Something went wrong",
@@ -102,7 +102,7 @@ export const postLedgerAccount = async (req, res) => {
       success: true,
     });
   } catch (error) {
-    console.log(error.message);
+
     return res.status(500).json({
       success: false,
       msg: "Something went wrong",
@@ -140,7 +140,7 @@ export const putLedgerAccount = async (req, res) => {
       success: true,
     });
   } catch (error) {
-    console.log(error.message);
+    
     return res.status(500).json({
       success: false,
       msg: "Something went wrong",
@@ -151,7 +151,7 @@ export const putLedgerAccount = async (req, res) => {
 export const deleteLedgerAccount = async (req, res) => {
   try {
     const { id } = req.params;
-    console.log("id is : ",id)
+    
 
     const deleteData = await ledgerAccountModel.findByIdAndDelete(id);
 
@@ -167,7 +167,7 @@ export const deleteLedgerAccount = async (req, res) => {
       success: true,
     });
   } catch (error) {
-    console.log(error.message);
+    
     return res.status(500).json({
       success: false,
       msg: "Something went wrong",
