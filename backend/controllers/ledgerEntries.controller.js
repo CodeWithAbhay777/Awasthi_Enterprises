@@ -143,7 +143,7 @@ export const editEntry = async (req, res) => {
 
     for (const entry of allEntries) {
       runningBalance += entry.debitAmount || 0;
-      runningBalance += entry.creditAmount || 0;
+      runningBalance -= entry.creditAmount || 0;
       entry.currentBalance = runningBalance;
       await entry.save();
     }
@@ -182,7 +182,7 @@ export const deleteEntry = async (req, res) => {
 
     for (const entry of allEntries) {
       runningBalance += entry.debitAmount || 0;
-      runningBalance += entry.creditAmount || 0;
+      runningBalance -= entry.creditAmount || 0;
       entry.currentBalance = runningBalance;
       await entry.save();
     }
