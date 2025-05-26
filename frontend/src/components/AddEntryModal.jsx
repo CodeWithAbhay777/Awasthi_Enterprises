@@ -51,7 +51,7 @@ const AddEntryModal = ({
       }
         
 
-      if ((creditAmount || creditAmount !== 0)  && (debitAmount || debitAmount !== 0)) {
+      if (creditAmount  && debitAmount) {
         setSaveLoading(false);
         return toast.error("Choose any one : Credit or Debit");
       }
