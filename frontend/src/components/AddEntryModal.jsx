@@ -29,33 +29,35 @@ const AddEntryModal = ({
   setTotal,
 }) => {
   const [particulars, setParticulars] = useState("");
-  const [debitAmount, setDebitAmount] = useState(0);
-  const [creditAmount, setCreditAmount] = useState(0);
+  let [debitAmount, setDebitAmount] = useState(0);
+  let [creditAmount, setCreditAmount] = useState(0);
   const [date, setDate] = useState(new Date());
-  const[saveLoading , setSaveLoading] = useState(false);
+  const [saveLoading, setSaveLoading] = useState(false);
 
   const handleSubmitEntry = async () => {
     try {
-
       setSaveLoading(true);
 
-      
-      if (!particulars){
+      if (!particulars) {
         setSaveLoading(false);
         return toast.error("particulars can't be empty");
-      } 
-
-      if ((!creditAmount || creditAmount === 0)  && (!debitAmount || debitAmount === 0)){
-         setSaveLoading(false);
-         return toast.error("Credit or debit both can't be empty");
       }
-        
 
-      if (creditAmount  && debitAmount) {
+      creditAmount = Number(creditAmount);
+      debitAmount = Number(debitAmount);
+
+      if (
+        (!creditAmount || creditAmount === 0) &&
+        (!debitAmount || debitAmount === 0)
+      ) {
+        setSaveLoading(false);
+        return toast.error("Credit or debit both can't be empty");
+      }
+
+      if (creditAmount && debitAmount) {
         setSaveLoading(false);
         return toast.error("Choose any one : Credit or Debit");
       }
-        
 
       const dataToSend = {};
 
@@ -65,31 +67,28 @@ const AddEntryModal = ({
       if (aid) dataToSend.ledgerOwnerId = aid;
       const newDate = getStructuredDate(date);
       if (newDate) dataToSend.date = newDate;
-      console.log('ready to make api call')
+      console.log("ready to make api call");
       const response = await postLedgerEntries(dataToSend);
 
-      if (!response.success){
+      if (!response.success) {
         setSaveLoading(false);
         return toast.error(response.res || "Something went wrong");
       }
-        
 
       toast.success("Entry added successfully!");
 
-      
-      
       const reFetch = await fetchEntries(aid, page);
-     
+
       setSaveLoading(false);
       if (!reFetch.success)
         return toast.error(reFetch.res || "Something went wrong!");
-      
+
       setAllEntries(reFetch.res);
       setTotal(reFetch.total);
       setAddEntryModal(false);
     } catch (error) {
       console.log(error);
-      toast.error('Something went wrong!');
+      toast.error("Something went wrong!");
     }
   };
 
@@ -147,6 +146,12 @@ const AddEntryModal = ({
                 type="Number"
                 value={creditAmount}
                 onChange={(e) => setCreditAmount(e.target.value)}
+                onFocus={() => {
+                  if (creditAmount === 0) setCreditAmount("");
+                }}
+                onBlur={() => {
+                  if (creditAmount === "") setCreditAmount(0);
+                }}
               />
             </div>
             <div className="flex flex-col space-y-1.5">
@@ -157,6 +162,12 @@ const AddEntryModal = ({
                 type="Number"
                 value={debitAmount}
                 onChange={(e) => setDebitAmount(e.target.value)}
+                onFocus={() => {
+                  if (debitAmount === 0) setDebitAmount("");
+                }}
+                onBlur={() => {
+                  if (debitAmount === "") setDebitAmount(0);
+                }}
               />
             </div>
           </div>
@@ -165,7 +176,17 @@ const AddEntryModal = ({
           <Button variant="outline" onClick={() => setAddEntryModal(false)}>
             Cancel
           </Button>
-          <Button onClick={handleSubmitEntry} disabled={saveLoading} >{!saveLoading ? 'Save entry' : <LoaderCircle className={`${saveLoading ? 'text-xl m-auto animate-spin' : ''}`}/>}</Button>
+          <Button onClick={handleSubmitEntry} disabled={saveLoading}>
+            {!saveLoading ? (
+              "Save entry"
+            ) : (
+              <LoaderCircle
+                className={`${
+                  saveLoading ? "text-xl m-auto animate-spin" : ""
+                }`}
+              />
+            )}
+          </Button>
         </CardFooter>
       </Card>
     </div>
