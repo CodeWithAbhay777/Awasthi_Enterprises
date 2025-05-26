@@ -9,6 +9,7 @@ import logoutUser from "@/utils/api/logoutUser";
 import {changeAuthState} from '../features/auth/authSlice.js';
 
 import { toast } from "sonner";
+import { persistor } from "@/redux/store";
 
 const Navbar = () => {
   const auth = useSelector((state) => state.auth.value);
@@ -27,6 +28,7 @@ const Navbar = () => {
     }
 
     dispatch(changeAuthState(newAuth));
+    persistor.purge();
     navigate('/login');
   }
 
