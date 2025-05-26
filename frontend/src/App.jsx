@@ -1,4 +1,4 @@
-import { useState } from "react";
+import react from "react";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Login from "./pages/Login";
@@ -6,42 +6,51 @@ import EntryPage from "./pages/EntryPage";
 import Mainlayout from "./layout/Mainlayout";
 import LedgerAccounts from "./pages/LedgerAccounts";
 import LedgerEntry from "./pages/LedgerEntry";
+import { ProtectedRoutes, AuthenticatedUser } from "./layout/ProtectedRoutes";
 
 const appRouter = createBrowserRouter([
   {
-    path : "/",
+    path: "/",
     element: <Mainlayout />,
     children: [
       {
         path: "/",
         element: (
-          <EntryPage />
+          
+            <EntryPage />
+          
         ),
       },
 
       {
         path: "login",
         element: (
-          <Login />
+          <AuthenticatedUser>
+            <Login />
+          </AuthenticatedUser>
         ),
       },
 
       {
         path: "ledger",
         element: (
-          <LedgerAccounts />
+          <ProtectedRoutes>
+            <LedgerAccounts />
+          </ProtectedRoutes>
         ),
       },
 
       {
         path: "ledger/:aid",
         element: (
-          <LedgerEntry />
+          <ProtectedRoutes>
+            <LedgerEntry />
+          </ProtectedRoutes>
         ),
-      }
-    ]
-  }
-])
+      },
+    ],
+  },
+]);
 
 function App() {
   return (
