@@ -1,21 +1,28 @@
 import deleteAccount from '@/utils/api/deleteAccount';
-import React from 'react'
+import React, { useState } from 'react'
 import { toast } from 'sonner';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
+import { LoaderCircle } from 'lucide-react';
 
 const ConfirmDeleteAccount = ({id , name , setConfirmDeleteModal, ledgerAccounts , setLedgerAccounts}) => {
+
+    const [loading , setLoading] = useState(false);
 
      const handleDeleteAccount = async() => {
 
         try {
+          setLoading(true);
             const response = await deleteAccount(id);
-            if(!response.success) return toast.error(response.res || 'Something went wrong!');
+            if(!response.success){
+              setLoading(false);
+              return toast.error(response.res || 'Something went wrong!');
+            } 
 
             const newLedgerAccounts = ledgerAccounts.filter((acc) => acc._id !== id);
             
             setLedgerAccounts(newLedgerAccounts);
-
+            setLoading(false);
             setConfirmDeleteModal({state : false , id : null , name : null});
 
             toast.success(response.res || 'Account deleted successfully');
@@ -42,7 +49,7 @@ const ConfirmDeleteAccount = ({id , name , setConfirmDeleteModal, ledgerAccounts
       </CardContent>
       <CardFooter className="flex justify-between">
         <Button variant="outline" onClick={() => setConfirmDeleteModal({state : false , name : null , id : null})}>Cancel</Button>
-        <Button onClick={handleDeleteAccount} className="bg-red-500">Confirm delete</Button>
+        <Button onClick={handleDeleteAccount} className="bg-red-500" disabled={loading}>{!loading ? 'Confirm delete' : <LoaderCircle className={`${loading ? 'text-xl m-auto animate-spin' : ''}`}/>}</Button>
       </CardFooter>
     </Card>
     </div>

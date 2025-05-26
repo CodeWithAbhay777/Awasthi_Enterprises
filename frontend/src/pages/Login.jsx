@@ -29,6 +29,7 @@ import Logo from "@/components/Logo";
 import Navbar from "@/components/Navbar";
 import { useDispatch} from "react-redux";
 import {changeAuthState} from '../features/auth/authSlice.js';
+import { LoaderCircle } from "lucide-react";
 
 const Login = () => {
   const [loginUsername, setLoginUsername] = useState("");
@@ -38,6 +39,7 @@ const Login = () => {
   const [registerEmail, setRegisterEmail] = useState("");
   const [registerPassword, setRegisterPassword] = useState("");
   const [loginRole, setLoginRole] = useState("");
+  const [loading , setLoading] = useState(false);
 
   const navigate = useNavigate();
   
@@ -53,6 +55,8 @@ const Login = () => {
       )
         return toast.error("Fill all fields");
 
+
+      setLoading(true);
       const dataToSend = {
         username: registerUsername,
         email: registerEmail,
@@ -61,8 +65,11 @@ const Login = () => {
       };
       const response = await registerUser(dataToSend);
 
-      if (!response.success)
+      if (!response.success){
+        setLoading(false);
         return toast.error(response.res || "Something went wrong");
+      }
+        
 
       toast.success("User registered successfully");
 
@@ -71,6 +78,7 @@ const Login = () => {
         authUserData : response.res,
       }
 
+      setLoading(false);
       dispatch(changeAuthState(newAuth));
 
       navigate("/");
@@ -86,7 +94,7 @@ const Login = () => {
         toast.error("Fill all fields");
         return;
       }
-
+      setLoading(true);
       const loginBody = {
         username: loginUsername,
         password: loginPassword,
@@ -95,8 +103,11 @@ const Login = () => {
 
       const response = await loginUser(loginBody);
 
-      if (!response.success)
+      if (!response.success){
+        setLoading(false);
         return toast.error(response.res || "Something went wrong");
+      }
+        
 
       toast.success("User registered successfully");
 
@@ -104,7 +115,7 @@ const Login = () => {
         authentication : true ,
         authUserData : response.res,
       }
-
+      setLoading(false);
       dispatch(changeAuthState(newAuth));
 
       navigate("/");
@@ -170,7 +181,7 @@ const Login = () => {
               </div>
             </CardContent>
             <CardFooter>
-              <Button onClick={handleLoginUser}>Login</Button>
+              <Button onClick={handleLoginUser} disabled={loading}>{!loading ? 'Login' : <LoaderCircle className={`${loading ? 'text-xl m-auto animate-spin' : ''}`}/>}</Button>
             </CardFooter>
           </Card>
         </TabsContent>
@@ -225,7 +236,7 @@ const Login = () => {
               </div>
             </CardContent>
             <CardFooter>
-              <Button onClick={handleRegisterUser}>Register</Button>
+              <Button onClick={handleRegisterUser} disabled={loading}>{!loading ? 'Signup' : <LoaderCircle className={`${loading ? 'text-xl m-auto animate-spin' : ''}`}/>}</Button>
             </CardFooter>
           </Card>
         </TabsContent>

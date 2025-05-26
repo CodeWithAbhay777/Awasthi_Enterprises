@@ -1,26 +1,36 @@
 
-import React from 'react'
+import React, { useState } from 'react'
 import { toast } from 'sonner';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import deleteEntry from '@/utils/api/deleteEntry';
 import fetchEntries from '@/utils/api/fetchEntries';
+import { LoaderCircle } from 'lucide-react';
 
 const ConfirmDeleteEntry = ({id , name , setConfirmDeleteModal , setAllEntries , aid , page , setTotal}) => {
+  const [loading , setLoading] = useState(false);
 
      const handleDeleteEntry = async() => {
 
         try {
+          setLoading(true);
             const response = await deleteEntry(id);
             
-            if (!response.success) return toast.error(response.res || 'Something went wrong');
+            if (!response.success){
+              setLoading(false);
+              return toast.error(response.res || 'Something went wrong');
+            } 
 
             const reFetch = await fetchEntries(aid , page);
             
-            if (!reFetch.success) return toast.error(reFetch.res || 'Something went wrong');
-            console.log(reFetch);
+            if (!reFetch.success){
+              setLoading(false);
+              return toast.error(reFetch.res || 'Something went wrong');
+            } 
+            
             setAllEntries(reFetch.res);
             setTotal(reFetch.total);
+            setLoading(false);
             toast.success('Entry deleted successfully!')
             setConfirmDeleteModal({state : false , id : null , name : null});
             
@@ -45,7 +55,7 @@ const ConfirmDeleteEntry = ({id , name , setConfirmDeleteModal , setAllEntries ,
       </CardContent>
       <CardFooter className="flex justify-between">
         <Button variant="outline" onClick={() => setConfirmDeleteModal({state : false , id : null , name : null})}>Cancel</Button>
-        <Button onClick={handleDeleteEntry} className="bg-red-500">Confirm delete</Button>
+        <Button onClick={handleDeleteEntry} className="bg-red-500" disabled={loading}>{!loading ? 'Confirm delete' : <LoaderCircle className={`${loading ? 'text-xl m-auto animate-spin' : ''}`}/>}</Button>
       </CardFooter>
     </Card>
     </div>

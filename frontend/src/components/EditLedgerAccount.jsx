@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
+import { LoaderCircle } from "lucide-react";
 
 const EditLedgerAccount = ({
   editModal,
@@ -20,10 +21,11 @@ const EditLedgerAccount = ({
     editModal.data.balanceAmount
   );
   const [newContact, setNewContact] = useState(editModal.data.contact);
+  const [loading , setLoading] = useState(false);
 
   const handleEditAccount = async () => {
     if (!newOrgName) return toast.error("Organization name can't be empty");
-
+    setLoading(true);
     const dataToSend = {};
 
     if (newOrgName) dataToSend.organizationName = newOrgName;
@@ -33,8 +35,11 @@ const EditLedgerAccount = ({
 
     const response = await editAccount(dataToSend, editModal.id);
 
-    if (!response.success)
+    if (!response.success){
+      setLoading(false);
       return toast.error(response.res || "Something went wrong!");
+    }
+      
 
     const newLedgerAccounts = ledgerAccounts.map((acc) =>
       acc._id === editModal.id
@@ -43,7 +48,7 @@ const EditLedgerAccount = ({
     );
 
     setLedgerAccounts(newLedgerAccounts);
-
+    setLoading(false);
     setEditModal({ state: false, id: null, data: null });
 
     toast.success(response.res || "Account edited successfully");
@@ -108,7 +113,7 @@ const EditLedgerAccount = ({
           >
             Cancel
           </Button>
-          <Button onClick={handleEditAccount}>Edit account</Button>
+          <Button onClick={handleEditAccount} disabled={loading}>{!loading ? 'Edit account' : <LoaderCircle className={`${loading ? 'text-xl m-auto animate-spin' : ''}`}/>}</Button>
         </CardFooter>
       </Card>
     </div>
